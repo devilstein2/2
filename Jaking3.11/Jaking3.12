@@ -777,7 +777,7 @@ def InfoAcc(username, gg):
     
     ss = f"""
 ＴＯＯＬ ＢＹ ＧＬ1Ｔ5
-👨‍💼 ɴᴀᴍᴇ       :: {full_name}
+ ɴᴀᴍᴇ       :: {full_name}
 🪪 ᴜsᴇʀɴᴀᴍᴇ    :: @{username}
 📧 ᴇᴍᴀɪʟ      :: {email}
 📊 ғᴏʟʟᴏᴡᴇʀs   :: {fows}
