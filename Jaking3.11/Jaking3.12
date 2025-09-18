@@ -1,4 +1,3 @@
-
 import os
 import time
 import json
@@ -21,9 +20,9 @@ import Topython
 import sys
 COLOR_COMBOS=[['green','yellow'],['magenta','red'],['blue','cyan'],['white','gray'],['red','magenta'],['yellow','green']]
 stein_colors,qe_colors=random.sample(COLOR_COMBOS,2)
-GL1T5=render('GL1T5',colors=stein_colors,align='center',font='block',background='black')
-QE=render('Telegram: @GL1T5 | Join @Glitch_army\nV5.0 ',colors=qe_colors,align='right',font='console',background='black')
-print(GL1T5)
+STEIN=render('YUJI',colors=stein_colors,align='center',font='block',background='black')
+QE=render('Telegram: @GL1T520 | Join @YUJIFILE\nV5.0 ',colors=qe_colors,align='right',font='console',background='black')
+print(STEIN)
 print(QE)
 time.sleep(1)
 c1='\x1b[38;5;120m'
@@ -42,83 +41,116 @@ import uuid
 import platform
 import hashlib
 Token=input(f"{white} Token : ")
-import requests
-import time
-import sys
-from datetime import datetime, timedelta
-import requests
-import time
-import sys
-from datetime import datetime, timedelta
-
-REMOTE_URL = "https://raw.githubusercontent.com/LEVIXX797/1/main/Acess.txt"
-
-def progress_bar(task="Processing", duration=2):
-    """Simple progress bar"""
-    for i in range(21):
-        percent = int((i/20) * 100)
-        bar = "█" * i + "-" * (20 - i)
-        sys.stdout.write(f"\r{task}: |{bar}| {percent}%")
-        sys.stdout.flush()
-        time.sleep(duration / 20)
-    print()  # New line after finish
-
-def fetch_id_data():
-    try:
-        progress_bar("Fetching Data", 2)
-        response = requests.get(REMOTE_URL, timeout=3)
-        response.raise_for_status()
-        return [line.strip() for line in response.text.strip().splitlines() if "|" in line]
-    except Exception as e:
-        print(f"\033[1m[❌] Error fetching data:\033[0m {e}")
-        return []
-
-def check_id_validity(input_id):
-    input_id = input_id.strip()
-    data = fetch_id_data()
-
-    progress_bar("Verifying ID", 2)
-
-    for record in data:
-        try:
-            id_val, expiry = map(str.strip, record.split("|"))
-            if id_val == input_id:
-                expiry_dt = datetime.strptime(expiry, "%Y-%m-%d %H:%M:%S")
-                if datetime.now() < expiry_dt:
-                    remaining_time = expiry_dt - datetime.now()
-                    hrs, rem = divmod(remaining_time.seconds, 3600)
-                    mins, secs = divmod(rem, 60)
-                    
-                    print(f"\033[1m\n[✅] Valid ID. Access expires in {hrs}h {mins}m {secs}s.\033[0m")
-                    print(f"\033[1m[⏳] Expiry Date & Time: {expiry_dt}\033[0m")
-                    
-                    # 👇 Yeh dono print hone ke baad 3 sec rukega
-                    time.sleep(3)
-                    
-                    return True
-                else:
-                    print("\033[1m\n[⛔] This ID has expired. Renew your subscription via @GL1T5\033[0m")
-                    return False
-        except Exception as err:
-            print(f"\033[1m[⚠️] Invalid record skipped:\033[0m {record} — {err}")
-
-    print("\033[1m\n[⚠️] You are not a paid user. Buy a subscription ~ @GL1T5 (TG)\033[0m")
-    return False
-
-ID = input("𝗨𝗦𝗘𝗥_𝗜𝗗: ")
-
-if not check_id_validity(ID):
-    exit()
-
-print("\033[1m\n[🚀] Access verified. Welcome!\033[0m")
 import base64
 import pytz
 import requests
 import sys
 from datetime import datetime
 import webbrowser
+import requests
+import os
+from datetime import datetime
+from time import sleep
+import threading
 
-os.system('cls' if os.name == 'nt' else 'clear')
+try:
+    from colorama import Fore, Style, init
+except:
+    os.system('pip install colorama')
+    from colorama import Fore, Style, init
+
+init(autoreset=True)
+
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+clear()
+print(f"{Fore.CYAN}{Style.BRIGHT}😾 𝐒𝐡𝐚𝐧𝐤𝐬 𝐩𝐚𝐢𝐝 𝐚𝐜𝐜𝐞𝐬𝐬 𝐬𝐲𝐬𝐭𝐞𝐦.!\n")
+print(f"\033[1;39m ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛ ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛")
+user_id=input(f"{Fore.YELLOW}𝐄𝐧𝐭𝐞𝐫 𝐲𝐨𝐮𝐫 𝐭𝐞𝐥𝐞𝐠𝐫𝐚𝐦 𝐮𝐬𝐞𝐫 𝐢𝐝: {Fore.RESET}").strip()
+print(f"\033[1;39m ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛ ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛  ➛")
+# GitHub raw file
+GITHUB_URL = "https://raw.githubusercontent.com/LEVIXX797/1/main/Acess.txt"
+
+try:
+    response = requests.get(GITHUB_URL)
+    response.raise_for_status()
+    valid_lines = response.text.splitlines()
+except requests.RequestException:
+    print(f"{Fore.RED}⚠️ 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐜𝐡𝐞𝐜𝐤 𝐚𝐜𝐜𝐞𝐬𝐬. 𝐂𝐡𝐞𝐜𝐤 𝐢𝐧𝐭𝐞𝐫𝐧𝐞𝐭.")
+    os._exit(1)
+
+access_granted = False
+expiry_datetime = None
+
+for line in valid_lines:
+    try:
+        user_id_part, date_part = line.split(',', 1)
+        user_id_part = user_id_part.strip()
+        date_time_str = date_part.strip()
+
+        if ID == user_id_part:
+            expiry_datetime = datetime.strptime(date_time_str, "%Y-%m-%d : %H:%M")
+            current_datetime = datetime.now()
+
+            if current_datetime <= expiry_datetime:
+                print(f"{Fore.GREEN}✅ 𝐀𝐜𝐜𝐞𝐬𝐬 𝐠𝐫𝐚𝐧𝐭𝐞𝐝. 𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐏𝐫𝐞𝐦𝐢𝐮𝐦 𝐔𝐬𝐞𝐫 ✨")
+                access_granted = True
+            else:
+                print(f"{Fore.RED}❌ 𝐒𝐮𝐛𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧 𝐞𝐱𝐩𝐢𝐫𝐞𝐝 𝐨𝐧 {expiry_datetime.strftime('%Y-%m-%d %H:%M')}.")
+            break
+    except Exception:
+        pass
+
+if not access_granted:
+    print(f"{Fore.RED}❌ 𝐀𝐜𝐜𝐞𝐬𝐬 𝐃𝐞𝐧𝐢𝐞𝐝. 𝐂𝐨𝐧𝐭𝐚𝐜𝐭 @vzn7p 𝐟𝐨𝐫 𝐬𝐮𝐛𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧.")
+    sleep(2)
+    os._exit(0)
+
+# ====================================
+# Show Timer Only for 3 Seconds (Real Timer + Expiry Date)
+# ====================================
+def show_timer_limited():
+    print(f"{Fore.MAGENTA}⏳ 𝐒𝐮𝐛𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧 𝐭𝐢𝐦𝐞𝐫 𝐬𝐭𝐚𝐫𝐭𝐞𝐝...")
+    print(f"{Fore.CYAN}📅 𝐄𝐱𝐩𝐢𝐫𝐲 𝐝𝐚𝐭𝐞: {expiry_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
+    for _ in range(3):  # Show only 3 updates (3 seconds)
+        remaining = expiry_datetime - datetime.now()
+        if remaining.total_seconds() <= 0:
+            print(f"\n{Fore.RED}❌ 𝐒𝐮𝐛𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧 𝐞𝐱𝐩𝐢𝐫𝐞𝐝. 𝐜𝐨𝐧𝐭𝐚𝐜𝐭 @vzn7p")
+            os._exit(0)
+        days = remaining.days
+        hours, remainder = divmod(remaining.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        print(f"{Fore.YELLOW}⏱️ 𝐓𝐢𝐦𝐞 𝐥𝐞𝐟𝐭: {days}d {hours}h {minutes}m {seconds}s", end='\r')
+        sleep(1)
+    print(f"{Fore.LIGHTBLACK_EX}\n⏱️ 𝚃𝚒𝚖𝚎𝚛 𝚑𝚒𝚍𝚍𝚎𝚗. 𝚂𝚞𝚋𝚜𝚌𝚛𝚒𝚙𝚝𝚒𝚘𝚗 𝚌𝚘𝚞𝚗𝚝𝚍𝚘𝚠𝚗 𝚌𝚘𝚗𝚝𝚒𝚗𝚎𝚞𝚜 𝚒𝚗 𝚋𝚊𝚌𝚔𝚐𝚛𝚘𝚞𝚗𝚍...")
+
+# Also keep checking expiry in background
+def monitor_expiry():
+    while True:
+        if datetime.now() >= expiry_datetime:
+            print(f"\n{Fore.RED}❌ 𝚂𝚄𝙱𝚂𝙲𝚁𝙸𝙿𝚃𝙸𝙾𝙽 𝙴𝚇𝙿𝙸𝚁𝙴𝙳 𝙿𝙻𝙴𝙰𝚂𝙴 𝙲𝙾𝙽𝚃𝙰𝙲𝚃 @vzn7p")
+            os._exit(0)
+        sleep(10)
+
+# Start monitoring expiry (but not showing timer)
+threading.Thread(target=monitor_expiry, daemon=True).start()
+
+# Show timer for only 3 seconds
+show_timer_limited()
+
+# ============================
+# Run Paid Tool After 0 Seconds
+# ============================
+sleep(0)
+print(f"\n{Fore.CYAN}🚀 𝚆𝙰𝙸𝚃 𝚂𝚃𝙰𝚁𝚃𝙸𝙽𝙶 𝚈𝙾𝚄𝚁 𝚃𝙾𝙾𝙻...\n")
+sleep(1)
+
+# ==========================
+# 𝐘𝐎𝐔𝐑 𝐏𝐀𝐈𝐃 𝐓𝐎𝐎𝐋 𝐇𝐄𝐑𝐄
+# ==========================
+print(f"{Fore.GREEN}✨ 𝚃𝙾𝙾𝙻 𝙸𝚂 𝙽𝙾𝚆 𝚁𝚄𝙽𝙽𝚄𝙽𝙶 𝙴𝙽𝙹𝙾𝚈.!")
+
 total=0
 hits=0
 bad_gm=0
@@ -184,32 +216,28 @@ def InfoAcc(username,gg):
 	elif reset_email.endswith('@a**.com')or reset_email.endswith('@aol.com'):email=f"{username}@aol.com"
 	else:email=f"{username}"
 	ss=f"""
-⚙️【ＴＯＯＬ ＢＹ ＧＬ1Ｔ5】⚙️
-━━━━━━━━━━━━━━━
-👨‍💼 ɴᴀᴍᴇ       :: {full_name}
-🪪 ᴜsᴇʀɴᴀᴍᴇ    :: @{username}
-📧 ᴇᴍᴀɪʟ      :: {email}
-📊 ғᴏʟʟᴏᴡᴇʀs   :: {fows}
-📉 ғᴏʟʟᴏᴡɪɴɢ  :: {fowg}
-🎞️ ᴘᴏsᴛs      :: {pp}
-📝 ʙɪᴏ        :: {bio}
-🔐 ᴘʀɪᴠᴀᴛᴇ    :: {isPraise}
-🆔 ɪᴅ         :: {Id}
-📅 ʏᴇᴀʀ       :: {date(Id)}
-🏅 ᴍᴇᴛᴀ       :: {meta}
-🌐 ᴘʀᴏғɪʟᴇ   :: https://www.instagram.com/{username}
-♻️ ʀᴇsᴇᴛ      :: {reset_email}
-━━━━━━━━━━━━━━━
-💻 ＴＯＯＬ ＢＹ ➤ @GL1T5 
-""";inline_keyboard=[[{'text':'Developer','url':'https://t.me/GL1T5'},{'text':'Join Channel','url':'https://t.me/GLITCH_ARMY'}]];payload={'chat_id':ID,'text':ss,'reply_markup':json.dumps({'inline_keyboard':inline_keyboard})}
+𝐓𝐎𝐎𝐋 𝐁𝐘 #YUJI  
+≿━━━━༺❀༻━━━━≾  
+[👱🏻] Name ==> {full_name}  
+[👻] Username ==> @{username}  
+[💌] Email ==> {email}  
+[🔁] Followers ==> {fows}  
+[🔂] Following ==> {fowg}  
+[🎥] Posts ==> {pp}  
+[📖] Bio ==> {bio}  
+[🔏] Private ==> {isPraise}
+[🔺] ID ==> {Id}  
+[📅] Year ==> {date(Id)}  
+[💯] Meta ==> {meta}  
+[↩️] URL ==> https://www.instagram.com/{username}  
+[🍳] RESET ==> {reset_email}  
+
+≿━━━━༺❀༻━━━━≾  
+TOOL BY @YUJIFILE
+""";inline_keyboard=[[{'text':'Developer','url':'https://t.me/GL1T520'},{'text':'Join Channel','url':'https://t.me/YUJIPAIDFILE'}]];payload={'chat_id':user_id,'text':ss,'reply_markup':json.dumps({'inline_keyboard':inline_keyboard})}
 	try:requests.post(f"https://api.telegram.org/bot{Token}/sendMessage",data=payload)
 	except:pass
-def pppp():
-    os.system('cls' if os.name=='nt' else 'clear')
-    print(""*54)
-    print(f" Hits: [{hits}]  ~  Bad: [{bad_gm}]  ~  Bad Email: {bad_mail} ")
-    print(""*54)
-    print("♡ GL1T5 ♡ ".center(54))
+def pppp():os.system('cls'if os.name=='nt'else'clear');terminal_width=os.get_terminal_size().columns;print(f"{c1}Hits : [{hits}]{white} ~ {z}Bad:[{bad_gm}]{white} ~ {p1}Bad Email : {bad_mail}");print(' '*((terminal_width-len(':: GLITCH ::'))//2)+':: YUJI ::')
 import requests
 import json
 import random
@@ -226,6 +254,13 @@ year_choice=safe_int_input('Enter your year choice (1-9): ',5)
 def generate_user_id():start,end=ranges.get(year_choice,ranges[5]);return str(random.randrange(start,end))
 def gg(min_followers,min_posts,user_id_func):
 	while True:
+		try:
+			user_id=user_id_func();model_number=str(random.randint(150,999));android_version=random.choice(['23/6.0','24/7.0','25/7.1.1','26/8.0','27/8.1','28/9.0']);dpi=str(random.randint(100,1300));resolution=f"{random.randint(200,2000)}x{random.randint(200,2000)}";brand=random.choice(['SAMSUNG','HUAWEI','LGE/lge','HTC','ASUS','ZTE','ONEPLUS','XIAOMI','OPPO','VIVO','SONY','REALME']);build_suffix=str(random.randint(111,999));user_agent=f"Instagram 311.0.0.32.118 Android ({android_version}; {dpi}dpi; {resolution}; {brand}; SM-T{model_number}; SM-T{model_number}; qcom; en_US; 545986{build_suffix})";lsd_token=''.join(random.choices(string.ascii_letters+string.digits,k=32));headers={'accept':'*/*','accept-language':'en,en-US;q=0.9','content-type':'application/x-www-form-urlencoded','dnt':'1','origin':'https://www.instagram.com','priority':'u=1, i','referer':'https://www.instagram.com/cristiano/following/','user-agent':user_agent,'x-fb-friendly-name':'PolarisUserHoverCardContentV2Query','x-fb-lsd':lsd_token};data={'lsd':lsd_token,'fb_api_caller_class':'RelayModern','fb_api_req_friendly_name':'PolarisUserHoverCardContentV2Query','variables':json.dumps({'userID':user_id,'username':'cristiano'}),'server_timestamps':'true','doc_id':'7717269488336001'};response=requests.post('https://www.instagram.com/api/graphql',headers=headers,data=data);user_info=response.json().get('data',{}).get('user',{});username=user_info.get('username','');infoinsta[username]=user_info;follower_count=int(user_info.get('follower_count',0));media_count=int(user_info.get('media_count',0))
+			if username and'_'not in username and follower_count>=min_followers and media_count>=min_posts:email=f"{username}@gmail.com";check(email)
+		except:pass
+minimum_followers=safe_int_input('Enter minimum followers needed: ',0)
+minimum_posts=safe_int_input('Enter minimum number of posts needed: ',0)
+for _ in range(120):Thread(target=gg,args=(minimum_followers,minimum_posts,generate_user_id)).start()	while True:
 		try:
 			user_id=user_id_func();model_number=str(random.randint(150,999));android_version=random.choice(['23/6.0','24/7.0','25/7.1.1','26/8.0','27/8.1','28/9.0']);dpi=str(random.randint(100,1300));resolution=f"{random.randint(200,2000)}x{random.randint(200,2000)}";brand=random.choice(['SAMSUNG','HUAWEI','LGE/lge','HTC','ASUS','ZTE','ONEPLUS','XIAOMI','OPPO','VIVO','SONY','REALME']);build_suffix=str(random.randint(111,999));user_agent=f"Instagram 311.0.0.32.118 Android ({android_version}; {dpi}dpi; {resolution}; {brand}; SM-T{model_number}; SM-T{model_number}; qcom; en_US; 545986{build_suffix})";lsd_token=''.join(random.choices(string.ascii_letters+string.digits,k=32));headers={'accept':'*/*','accept-language':'en,en-US;q=0.9','content-type':'application/x-www-form-urlencoded','dnt':'1','origin':'https://www.instagram.com','priority':'u=1, i','referer':'https://www.instagram.com/cristiano/following/','user-agent':user_agent,'x-fb-friendly-name':'PolarisUserHoverCardContentV2Query','x-fb-lsd':lsd_token};data={'lsd':lsd_token,'fb_api_caller_class':'RelayModern','fb_api_req_friendly_name':'PolarisUserHoverCardContentV2Query','variables':json.dumps({'userID':user_id,'username':'cristiano'}),'server_timestamps':'true','doc_id':'7717269488336001'};response=requests.post('https://www.instagram.com/api/graphql',headers=headers,data=data);user_info=response.json().get('data',{}).get('user',{});username=user_info.get('username','');infoinsta[username]=user_info;follower_count=int(user_info.get('follower_count',0));media_count=int(user_info.get('media_count',0))
 			if username and'_'not in username and follower_count>=min_followers and media_count>=min_posts:email=f"{username}@gmail.com";check(email)
