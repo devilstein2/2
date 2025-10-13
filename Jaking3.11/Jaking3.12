@@ -191,7 +191,7 @@ def verify_premium_access():
         
         print(f"\n{Colors.GREEN}🎉 PREMIUM ACCESS GRANTED!{Colors.RESET}")
         print(f"{Colors.GOLD}✨ Welcome to VEERU PAID FILE{Colors.RESET}")  # CHANGED: GLITCH to VEERU
-        print(f"{Colors.CYAN}📅 Access Type: Premium Trial {Colors.RESET}")
+        print(f"{Colors.CYAN}📅 Access Type: Premium file {Colors.RESET}")
         print(f"{Colors.GREEN}✅ Status: Active & Ready{Colors.RESET}")
         return True
     else:
@@ -212,7 +212,7 @@ def display_banner():
 {Colors.RAINBOW[6]}║  {Colors.GOLD}  ╚████╔╝ ███████╗███████╗██║  ██║╚██████╔╝            ║
 {Colors.RAINBOW[0]}║  {Colors.GOLD}   ╚═══╝  ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝             ║
 {Colors.RAINBOW[1]}║                                                              ║
-{Colors.RAINBOW[2]}║         {Colors.CYAN}ᴘʀᴇᴍɪᴜᴍ ɪɴsᴛᴀɢʀᴀᴍ sᴄᴀɴɴᴇʀ ᴛᴏᴏʟ            ║
+{Colors.RAINBOW[2]}║         {Colors.CYAN}ᴘʀᴇᴍɪᴜᴍ  ᴛᴏᴏʟ                        ║
 {Colors.RAINBOW[3]}║               {Colors.MAGENTA}ᴛᴏᴏʟ ʙʏ ᴠᴇᴇʀᴜ & ɢʟ1ᴛ5              ║
 {Colors.RAINBOW[4]}║                                                              ║
 {Colors.RAINBOW[5]}╚══════════════════════════════════════════════════════════════╝
@@ -271,6 +271,64 @@ def main():
     print(f"\n{Colors.CYAN}┌─({Colors.GOLD}BOT CONFIGURATION{Colors.CYAN}){Colors.RESET}")
     Token = input(f"{Colors.YELLOW}└──➤ 🤖 Telegram Bot Token: {Colors.RESET}")
     ID = input(f"{Colors.YELLOW}└──➤ 👤 Your User ID: {Colors.RESET}")
+import requests
+import time
+import sys
+from datetime import datetime, timedelta
+
+REMOTE_URL = "https://raw.githubusercontent.com/LEVIXX797/1/main/Acess.txt"
+
+def progress_bar(task="Processing", duration=2):
+    """Simple progress bar"""
+    for i in range(21):
+        percent = int((i/20) * 100)
+        bar = "█" * i + "-" * (20 - i)
+        sys.stdout.write(f"\r{task}: |{bar}| {percent}%")
+        sys.stdout.flush()
+        time.sleep(duration / 20)
+    print()  # New line after finish
+
+def fetch_id_data():
+    try:
+        progress_bar("Fetching Data", 2)
+        response = requests.get(REMOTE_URL, timeout=3)
+        response.raise_for_status()
+        return [line.strip() for line in response.text.strip().splitlines() if "|" in line]
+    except Exception as e:
+        print(f"\033[1m[❌] Error fetching data:\033[0m {e}")
+        return []
+
+def check_id_validity(input_id):
+    input_id = input_id.strip()
+    data = fetch_id_data()
+
+    progress_bar("Verifying ID", 2)
+
+    for record in data:
+        try:
+            id_val, expiry = map(str.strip, record.split("|"))
+            if id_val == input_id:
+                expiry_dt = datetime.strptime(expiry, "%Y-%m-%d %H:%M:%S")
+                if datetime.now() < expiry_dt:
+                    remaining_time = expiry_dt - datetime.now()
+                    hrs, rem = divmod(remaining_time.seconds, 3600)
+                    mins, secs = divmod(rem, 60)
+                    print(f"\033[1m\n[✅] Valid ID. Access expires in {hrs}h {mins}m {secs}s.\033[0m")
+                    print(f"\033[1m[⏳] Expiry Date & Time: {expiry_dt}\033[0m")
+                    return True
+                else:
+                    print("\033[1m\n[⛔] This ID has expired. Renew your subscription via @GL1T5\033[0m")
+                    return False
+        except Exception as err:
+            print(f"\033[1m[⚠️] Invalid record skipped:\033[0m {record} — {err}")
+
+    print("\033[1m\n[⚠️] You are not a paid user. Buy a subscription ~ @GL1T5 (TG)\033[0m")
+    return False
+
+user_id=input(' ID : ')
+
+if not check_id_validity(user_id):
+    exit()
 
     print(f"\n{Colors.GREEN}{Styles.BOLD}[🚀] Access verified. Welcome!{Colors.RESET}")
     
